@@ -1,6 +1,8 @@
 import requests
-from data_manager import DataManager
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 AMADEUS_API_KEY = os.environ["AMADEUS_API_KEY"]
 AMADEUS_API_SECRET = os.environ["AMADEUS_API_SECRET"]
@@ -22,8 +24,6 @@ class FlightSearch:
         self.cityname = name
         self.token = self.generate_new_token()
         self.iatacode = self.get_iatacode()
-        print(self.token)
-        print(self.iatacode)
 
     @staticmethod
     def generate_new_token():
@@ -36,5 +36,3 @@ class FlightSearch:
             url=f"https://test.api.amadeus.com/v1/reference-data/locations/cities?keyword={self.cityname}&max=1",
             headers=auth).json()
         return city_response["data"][0]["iataCode"]
-
-flight = FlightSearch("Paris")
