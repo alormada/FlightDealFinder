@@ -59,5 +59,3 @@ class DataManager:
             endpoint = SHEETY_ENDPOINT + f"/{i + 2}"
             response = requests.put(url=endpoint, json=params, headers=sheety_headers).json()
             print(response)
-
-docs = DataManager()
