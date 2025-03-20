@@ -16,24 +16,30 @@ sheety_headers = {
 class DataManager:
     def __init__(self):
         self.cities = self.get_cities()
-        self.update_iata()
+        self.update_data()
 
     def get_cities(self):
         response = requests.get(url=SHEETY_ENDPOINT, headers=sheety_headers).json()
         cities = [city["city"] for city in response[endpoint_name]]
         return cities
 
-    def update_iata(self):
+    def update_data(self):
         for i in range(len(self.cities)):
             flight = flight_search.FlightSearch(self.cities[i])
-            iata = flight.get_iatacode()
+            iata = flight.iatacode
+            try:
+                best_price = flight.search_flight()
+            except:
+                best_price = "N/A"
             params = {
                 f"price": {
-                    "iataCode": f"{iata}"
+                    "iataCode": f"{iata}",
+                    "lowestPrice": f"{best_price}"
                 }
             }
             endpoint = SHEETY_ENDPOINT + f"/{i + 2}"
             response = requests.put(url=endpoint, json=params, headers=sheety_headers).json()
             print(response)
+
 
 docs = DataManager()
